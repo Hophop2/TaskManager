@@ -24,10 +24,10 @@ const getAllTasks = asyncHandler(async (req, res) => {
 
 
 const createNewTask = asyncHandler(async (req, res) => {
-    const { user, title, content, subtasks } = req.body
+    const { user, title, content, completed, subtasks, flag } = req.body
 
     // Confirm data
-    if (!user || !title || !content) {
+    if (!user || !title || !content || !subtasks || !completed) {
         return res.status(400).json({ message: 'All fields are required' })
     }
 
@@ -39,7 +39,7 @@ const createNewTask = asyncHandler(async (req, res) => {
     }
 
     // Create and store the new user 
-    const task = await Task.create({ user, title, content, subtasks })
+    const task = await Task.create({ user, title, content, subtasks, completed, flag })
 
     if (task) { // Created 
         return res.status(201).json({ message: 'New task created' })
@@ -51,10 +51,10 @@ const createNewTask = asyncHandler(async (req, res) => {
 
 
 const updateTask = asyncHandler(async (req, res) => {
-    const { id, user, title, content, subtasks } = req.body
+    const { id, user, title, content, completed, subtasks, flag } = req.body
 
     // Confirm data
-    if (!id || !user || !title || !content || typeof completed !== 'boolean') {
+    if (!id || !user || !title || !content || !subtasks) {
         return res.status(400).json({ message: 'All fields are required' })
     }
 
@@ -76,7 +76,9 @@ const updateTask = asyncHandler(async (req, res) => {
     task.user = user
     task.title = title
     task.content = content
+    task.subtasks = subtasks
     task.completed = completed
+    task.flag = flag
 
     const updatedTask = await task.save()
 

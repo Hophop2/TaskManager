@@ -1,8 +1,22 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 
+const show = keyframes`
+  from {
+    
+    opacity: 0;
+  }
 
+  to {
+    
+    opacity: 1;
+    filter: blur(0);
+  }
+`;
 export const Container = styled.div`
 display: flex;
+height:100vh;
+
+
 `
 
 
@@ -44,37 +58,95 @@ gap: 20px;
     
 }
 
-h1{
 
-
-}
 .ul-workspace{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
+   
+  position: relative;
+  left: -45px;
+  
+    
 }
 
 .ul-workspace li{
+    position: relative;
+    left: 0;
     list-style: none;
     cursor: pointer;
-    border-radius: 0.5rem 0.5rem 0.5rem 0.5rem; 
+     transition: 0.5s;
     font-size: 1rem;
+    margin: 8px 0;
+    border-left: 2px solid hsl(317 100% 54%);
+    animation: ${show} 0.5s ease-in-out forwards;
+    opacity: 0;
+    filter: blur(5px);
+   
+   
+    width: 126px;
+    
    
     
     
 }
-`
-export const TaskContainer = styled.div`
-width: 100%;
-display: flex;
-.column{
-    width: calc(100%/3);
-    min-height: 100vh;
+
+.ul-workspace li::before{
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: hsl(317 100% 54%);
+    transform: scaleX(0);
+    transition: 0.5s;
+    transform-origin: left;
+}
+.ul-workspace li:hover::before{
+    transform: scaleX(1);
+    filter: blur(2px);
+    border-radius: 5px 5px 5px 5px;
     
     
 }
+.ul-workspace li span{
+    position: relative;
+    padding: 8px;
+    display: inline-block;
+    z-index: 1;
+    transition: 0.5s;
+}
+.ul-workspace li:hover span{
+    color: black;
+}
+.ul-workspace li:hover{
+    left: 10px;
+}
+`
+export const TaskContainer = styled.div`
+width: 100%;
+height: 100vh;
+display: flex;
 
+
+
+
+.column{
+    min-width: calc(100%/3);
+    
+    &::-webkit-scrollbar {
+        width: 12px;
+        
+        background-color: rgba(255,255,255,0.6);
+    }
+    &::-webkit-scrollbar-thumb {
+        width: 12px;
+        
+        background-color: rgba(0,0,0,0.5);
+    }
+
+    
+    
+}
+.scroll{
+    overflow-y: scroll;
+}
 .chevron{
     width: 100%;
     height: 60px;
@@ -84,16 +156,22 @@ display: flex;
     justify-content: center;
     align-items: center;
     font-size: 1.2em;
+    
    
    
 }
 .item-container{
-    min-height: calc(100vh - 180px);
+    
     display: flex;
+   
     align-items: center;
     flex-direction: column;
     gap: 2em;
     margin: 3em;
+    
+    
+    
+  
 }
 
 

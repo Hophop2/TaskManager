@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react"
 import { useUpdateTaskMutation, useDeleteTaskMutation } from "./tasksApiSlice"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, redirect, useNavigate } from "react-router-dom"
 import { Bckg } from "../../../../styles/BckgStyle"
 import { Container } from "../../../../styles/EditTaskStyles"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faFlag, faHouse  } from '@fortawesome/free-solid-svg-icons'
 import { faCheck  } from '@fortawesome/free-solid-svg-icons'
-import { faXmark } from '@fortawesome/free-solid-svg-icons'
+
 import { StandBtn } from "../../../../styles/StandardBtn"
 import { Icon } from "../../../../styles/BigTaskStyle"
 
@@ -14,7 +14,7 @@ import { Icon } from "../../../../styles/BigTaskStyle"
 
 const EditTaskForm = ({ task, users }) => {
     console.log(task.subtasks)
-    const completedTasks = Object.values(task.subtasks).filter(task => task.completed)
+    
    
     // const { isManager, isAdmin } = useAuth()
 
@@ -38,6 +38,7 @@ const EditTaskForm = ({ task, users }) => {
     const [completed, setCompleted] = useState(task.completed)
     const [userId, setUserId] = useState(task.user)
     const [subtasks, setSubtasks] = useState(task.subtasks)
+    const [flag, setFlag] = useState(task.flag)
 console.log(subtasks)
     useEffect(() => {
 
@@ -45,11 +46,13 @@ console.log(subtasks)
             setTitle('')
             setContent('')
             setUserId('')
+            setFlag('')
             setSubtasks([{name:"", completedCheck:false}])
+            navigate('/dash/tasks')
             
         }
 
-    }, [isSuccess, isDelSuccess,])
+    }, [isSuccess, isDelSuccess, navigate])
 
     const updateSubtask = (index, updatedSubtask) => {
         setSubtasks(prevSubtasks => {
@@ -61,7 +64,9 @@ console.log(subtasks)
 
     const onTitleChanged = e => setTitle(e.target.value)
     const onContentChanged = e => setContent(e.target.value)
-    const onCompletedChanged = e => setCompleted(prev => !prev)
+    const onCompletedChanged = e => setCompleted(
+        completed === "todo" ? "doing" : completed === "doing" ? "done" : "todo"
+    )
     const onUserIdChanged = e => setUserId(e.target.value)
     const onSubtasksChanged = (e, i) => {
         const {name, value} = e.target
@@ -70,11 +75,33 @@ console.log(subtasks)
         updateSubtask(i, subList)
         }
 
+
+
+        const handleSubtaskClick = (i) => {
+          const newSubtasks = [...subtasks];
+          newSubtasks[i] = {
+            ...newSubtasks[i],
+            completedCheck: !newSubtasks[i].completedCheck
+          };
+          setSubtasks(newSubtasks);
+        
+         
+        };
+        const onChangeFlag = () => {
+            if (flag === 'High') {
+              setFlag('Low');
+            } else if (flag === 'Low') {
+              setFlag('Medium');
+            } else if (flag === 'Medium') {
+              setFlag('High');
+            }
+          };
+
     const canSave = [title, content, userId].every(Boolean) && !isLoading
 
-    const onSaveTaskClicked = async (e) => {
+    const onSaveTaskClicked = async () => {
         if (canSave) {
-            await updateTask({ id: task.id, user: userId, title, content, completed, })
+            await updateTask({ id: task.id, user: userId, title, content, completed, subtasks, flag })
             
         }
     }
@@ -113,18 +140,17 @@ console.log(subtasks)
     //         </button>
     //     )
     // }
-console.log(Object.values(task.subtasks).map((item) => {
-    console.log(item.name)
+console.log(subtasks)
     
-    
-}))
+
+let flagColor = flag === "Medium" ? "orange" : flag === "High" ? "red" : flag === "Low" ? "white" : null
     const contents = (
         <>
         <Bckg >
         
         <Container>
            <Icon>
-            <Link to="/tasks"><FontAwesomeIcon icon={faHouse} size="2xl"  /></Link>
+            <Link to="/dash/tasks"><FontAwesomeIcon icon={faHouse} size="2xl"  /></Link>
            </Icon>
         <form onSubmit={e => e.preventDefault()}>
             <div className="wrapper">
@@ -133,8 +159,8 @@ console.log(Object.values(task.subtasks).map((item) => {
             
            
                 <div className="completed">
-                    {task.completed}
-                    <FontAwesomeIcon icon={faFlag} size="lg" />
+                    <div onClick={onCompletedChanged} className="com">{completed}</div>
+                    <FontAwesomeIcon icon={faFlag} style={{color: flagColor,}} onClick={onChangeFlag} size="lg" />
                 </div>
             <div className="input-box">
               <input
@@ -168,6 +194,7 @@ console.log(Object.values(task.subtasks).map((item) => {
               
           
               <StandBtn onClick={onSaveTaskClicked}>Update Task</StandBtn>
+              <StandBtn onClick={onDeleteTaskClicked}>Delete Task</StandBtn>
               
              
             </div>
@@ -175,7 +202,7 @@ console.log(Object.values(task.subtasks).map((item) => {
             <div className="content-box">
             <div>{
               
-              Object.values(task.subtasks).map((item, i) => {
+              Object.values(subtasks).map((item, i) => {
                 
                 
                 return (
@@ -186,7 +213,7 @@ console.log(Object.values(task.subtasks).map((item) => {
                     <div className="input-box inp">
               <input
                 type="text"
-                name="name"
+                name="sub"
                 className="title"
                 value={subtasks[i].name}
                 onChange={e=>onSubtasksChanged(e,i)}
@@ -197,14 +224,18 @@ console.log(Object.values(task.subtasks).map((item) => {
               
               
               </div>
-              {item.completed ? null : <FontAwesomeIcon icon={faCheck} size="lg" />}
+              <input
+             type="checkbox"
+             checked={subtasks[i].completedCheck}
+             onChange={() => handleSubtaskClick(i)}
+           />
               </div>
               
                     </>
                 )
               })
               }</div>
-              <h3>Subtasks completed: {completedTasks.length}</h3>
+              
             </div>
             
             </div>

@@ -2,6 +2,8 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useGetTasksQuery } from './tasksApiSlice'
 import { Container } from '../../../../styles/TaskStyle'
+import { faFlag } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 const Task = ({taskId}) => {
 
@@ -13,23 +15,19 @@ const Task = ({taskId}) => {
     const navigate = useNavigate()
 
     if(task) {
-        const created = new Date(task.createdAt).toLocaleString('en-US', { day: 'numeric', month: 'long' })
+       let flagColor = task.flag === "Medium" ? "orange" : task.flag === "High" ? "red" : task.flag === "Low" ? "white" : null
 
-        const updated = new Date(task.updatedAt).toLocaleString('en-US', { day: 'numeric', month: 'long' })
-
-        const handleEdit = () => navigate(`/tasks/${taskId}`)
+        const handleEdit = () => navigate(`/dash/tasks/${taskId}`)
         return (
             <>
                 <Container onClick={handleEdit}>
                     <h3>{task.title}</h3>
                     {/* <div>{task.content}</div> */}
-                    <div>{task.username}</div>
-                    <div>{task.subtasks?.map((item) =>{
-                        <>
-                        <div>{item.name}</div>
-                        <div>{item.completedCheck}</div>
-                        </>
-                    })}</div>
+                    <div className='up-wrapper'>
+                    <FontAwesomeIcon icon={faFlag} style={{color: flagColor,}} size="lg" />
+                    {task.username}
+                    </div>
+                 
                     
                 </Container>
             </>

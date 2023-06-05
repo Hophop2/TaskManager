@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Container } from "./styleLoginPage/loginPageStyle";
+
 import axios from "axios";
 import { Bckg } from "../../styles/BckgStyle";
 import { useAddNewUserMutation } from "../taskpage/features/users/usersApiSlice";
 import { StandBtn } from "../../styles/StandardBtn";
+import { Container } from "../../styles/loginPageStyle";
 
 
 

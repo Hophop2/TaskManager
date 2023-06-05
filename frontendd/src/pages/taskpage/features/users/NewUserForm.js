@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react"
 import { useAddNewUserMutation } from "./usersApiSlice"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 
 import useTitle from "../../../../hooks/useTitle"
 import { ROLES } from "../../../../config/roles"
+import { Bckg } from "../../../../styles/BckgStyle"
+
+import { StandBtn } from "../../../../styles/StandardBtn"
+import { Container } from "../../../../styles/loginPageStyle"
 
 
 const USER_REGEX = /^[A-z]{3,20}$/
@@ -25,6 +29,7 @@ const NewUserForm = () => {
     const [username, setUsername] = useState('')
     const [validUsername, setValidUsername] = useState(false)
     const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
     const [validPassword, setValidPassword] = useState(false)
     const [roles, setRoles] = useState(["Employee"])
 
@@ -47,6 +52,7 @@ const NewUserForm = () => {
 
     const onUsernameChanged = e => setUsername(e.target.value)
     const onPasswordChanged = e => setPassword(e.target.value)
+    const onConfirmPasswordChanged = e => setConfirmPassword(e.target.value)
 
     const onRolesChanged = e => {
         const values = Array.from(
@@ -57,10 +63,11 @@ const NewUserForm = () => {
     }
 
     const canSave = [roles.length, validUsername, validPassword].every(Boolean) && !isLoading
+   
 
     const onSaveUserClicked = async (e) => {
         e.preventDefault()
-        if (canSave) {
+        if (canSave && password === confirmPassword) {
             await addNewUser({ username, password, roles })
         }
     }
@@ -83,46 +90,53 @@ const NewUserForm = () => {
 
     const content = (
         <>
-            <p className={errClass}>{error?.data?.message}</p>
+         <Bckg>
+    <Container>
+      <div className="box">
+        <div className="wrapper">
+          <div className="text-box">
+            <h1>Task Manager</h1>
+            <span className="login">Create user</span>
+          </div>
 
-            <form className="form" onSubmit={onSaveUserClicked}>
-                <div className="form__title-row">
-                    <h2>New User</h2>
-                    <div className="form__action-buttons">
-                        <button
-                            className="icon-button"
-                            title="Save"
-                            disabled={!canSave}
-                        >
-                            Klikaj
-                        </button>
-                    </div>
-                </div>
-                <label className="form__label" htmlFor="username">
-                    Username: <span className="nowrap">[3-20 letters]</span></label>
-                <input
-                    className={`form__input ${validUserClass}`}
-                    id="username"
-                    name="username"
-                    type="text"
-                    autoComplete="off"
-                    value={username}
-                    onChange={onUsernameChanged}
-                />
+          <form onSubmit={onSaveUserClicked}>
+            <div className="input-box">
+              <input
+                type="text"
+                name="username"
+                value={username}
+                onChange={onUsernameChanged}
+                required
+              />
+              <span>Username</span>
+            </div>
 
-                <label className="form__label" htmlFor="password">
-                    Password: <span className="nowrap">[4-12 chars incl. !@#$%]</span></label>
-                <input
-                    className={`form__input ${validPwdClass}`}
-                    id="password"
-                    name="password"
-                    type="password"
-                    value={password}
-                    onChange={onPasswordChanged}
-                />
+            <div className="input-box">
+              <input
+                type="password"
+                name="password"
+                value={password}
+                onChange={onPasswordChanged}
+                required
+              />
+              <span>Password</span>
+            </div>
 
-                <label className="form__label" htmlFor="roles">
+            <div className="input-box">
+              <input
+                type="password"
+                name="confirmPassword"
+                value={confirmPassword}
+                onChange={onConfirmPasswordChanged}
+                required
+              />
+              <span> Confirm Password</span>
+            </div>
+
+            <label className="form__label" htmlFor="roles">
                     ASSIGNED ROLES:</label>
+                    <details>
+                    <summary>Roles</summary>
                 <select
                     id="roles"
                     name="roles"
@@ -132,10 +146,19 @@ const NewUserForm = () => {
                     value={roles}
                     onChange={onRolesChanged}
                 >
-                    {options}
+                    
+                      {options}
+                      
                 </select>
+                </details>
+                <br />
 
-            </form>
+            <StandBtn>Sign in</StandBtn>
+          </form>
+        </div>
+      </div>
+    </Container>
+    </Bckg>
         </>
     )
 

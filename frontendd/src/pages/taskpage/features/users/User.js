@@ -2,6 +2,7 @@
 import { useNavigate } from 'react-router-dom'
 import { useGetUsersQuery } from './usersApiSlice'
 import { memo } from 'react'
+import { Table, Trs } from '../../../../styles/UserStyle'
 
 const User = ({ userId }) => {
 
@@ -21,21 +22,24 @@ const User = ({ userId }) => {
         const cellStatus = user.active ? '' : 'table__cell--inactive'
 
         return (
-            <>
-
-            <div className='user-box'>
-                <span>Username: {user.username}</span>
-                <span>Role: {userRolesString}</span>
+            <tr>
+                
             
-                    <button
+              
+                <td>{user.username}</td>
+                <td>{userRolesString}</td>
+                <td><button
                         className="icon-button table__button"
                         onClick={handleEdit}
                     >
                         Edytuj
                     </button>
-                    </div>
-                    <br />
-            </>
+                    </td>
+             
+               
+                    
+                
+            </tr>
         )
 
     } else return null

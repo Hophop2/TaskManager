@@ -1,6 +1,7 @@
 import React from 'react'
 import { ThreeCircles } from 'react-loader-spinner'
-import { Container } from '../pages/loginpage/styleLoginPage/loginPageStyle'
+import { Container } from '../styles/loginPageStyle'
+
 
 const Loader = () => {
   return (

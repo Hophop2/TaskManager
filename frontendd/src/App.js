@@ -13,8 +13,10 @@ import NewTask from "./pages/taskpage/features/tasks/NewTask";
 import UsersList from "./pages/taskpage/features/users/UsersList";
 import NewUserForm from "./pages/taskpage/features/users/NewUserForm";
 import EditTask from "./pages/taskpage/features/tasks/EditTask";
-import BigTask from "./pages/taskpage/features/tasks/BigTask";
+
 import PreTask from "./pages/taskpage/features/tasks/PreTask";
+import Test from "./components/Test";
+import DashLayout from "./components/DashLayout";
 
 
 function App() {
@@ -28,6 +30,9 @@ function App() {
         <Route path="/forgot" element={<Forgotpass />} />
         
 
+
+        <Route path="dash" element={<DashLayout />}>
+        <Route index element={<Test />} />
         <Route path="users">
                     <Route index element={<UsersList />} />
                     <Route path="new" element={<NewUserForm />} />
@@ -42,6 +47,7 @@ function App() {
                     </Route>
                     
                     <Route path="new" element={<NewTask />} />
+                </Route>
                 </Route>
       </Route>
     

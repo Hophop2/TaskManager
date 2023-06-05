@@ -5,10 +5,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Bckg } from "../../../../styles/BckgStyle"
 import { Container } from "../../../../styles/NewTaskFormStyle"
 import { faPlus, faXmark } from "@fortawesome/free-solid-svg-icons"
+import { importance } from "../../../../config/colors"
 
 
 const NewTaskForm = ({users}) => {
-
+  const colors = ["High", "Medium", "Low"]
     const [addNewTask, {
         isLoading,
         isSuccess,
@@ -23,12 +24,15 @@ const NewTaskForm = ({users}) => {
     const [completed, setCompleted] = useState('')
     const [userId, setUserId] = useState(users[0].id)
     const [subtasks, setSubtasks] = useState([{name:"", completedCheck:false}])
+    const [flag, setFlag] = useState(colors[0].id)
     
    
     useEffect(() => {
         if (isSuccess) {
             setTitle('')
             setContent('')
+            setFlag('')
+            setCompleted('')
             setUserId('')
             setSubtasks('')
             navigate('/tasks')
@@ -38,6 +42,7 @@ const NewTaskForm = ({users}) => {
     const onTitleChanged = e => setTitle(e.target.value)
     const onContentChanged = e => setContent(e.target.value)
     const onUserIdChanged = e => setUserId(e.target.value)
+    const onFlagChanged = e => setFlag(e.target.value)
     const onCompletedChanged = e => setCompleted(e.target.value)
     const onSubtasksChanged = (e, i) => {
       const {name, value} = e.target
@@ -48,7 +53,7 @@ const NewTaskForm = ({users}) => {
 
       const addRow = () => {
      
-        setSubtasks([...subtasks, {name:'', completedCheck:''}])
+        setSubtasks([...subtasks, {name:'', completedCheck:false}])
       }
       const onRemove=(i) => {
         
@@ -57,13 +62,13 @@ const NewTaskForm = ({users}) => {
         setSubtasks(newForm)
       }
 
-
-    const canSave = [title, content, userId, completed].every(Boolean) && !isLoading
+console.log(completed)
+    const canSave = [title, content, userId, completed, flag].every(Boolean) && !isLoading
 
     const onSaveTaskClicked = async (e) => {
         e.preventDefault()
         if (canSave) {
-            await addNewTask({user: userId, title, content, completed, subtasks})
+            await addNewTask({user: userId, title, content, completed, subtasks, flag})
         }
     }
 
@@ -75,6 +80,14 @@ const NewTaskForm = ({users}) => {
             > {user.username}</option >
         )
     })
+    const optionsFlag = colors.map(color => {
+      return (
+          <option
+              key={color.id}
+              value={color.id}
+          > {color}</option >
+      )
+  })
 
 
 
@@ -173,6 +186,18 @@ const NewTaskForm = ({users}) => {
                     onChange={onUserIdChanged}
                 >
                     {options}
+                </select>
+                <br />
+                <label>
+                    Important:</label>
+                <select
+                    id="flag"
+                    name="flag"
+                    className="form__select"
+                    value={flag}
+                    onChange={onFlagChanged}
+                >
+                    {optionsFlag}
                 </select>
                 <br />
 

@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 const subtaskSchema = new mongoose.Schema({
     name: String,
-    completed: {
+    completedCheck: {
         type: Boolean,
         default: false
     }
@@ -20,15 +20,19 @@ const taskSchema = new mongoose.Schema({
     },
     content: {
         type: String,
+        
         required: true
     },
-
-   subtasks: [subtaskSchema],
     completed: {
         type: String,
-        required: true,
-        default: "Employee"
-    }
+        required: true
+    },
+    flag: {
+        type: String
+    },
+
+   subtasks: [subtaskSchema]
+   
   
     
 })

@@ -1,8 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Container } from "./styleLoginPage/loginPageStyle";
+
 import { Bckg } from "../../styles/BckgStyle";
 import { StandBtn } from "../../styles/StandardBtn";
+import { Container } from "../../styles/loginPageStyle";
 
 const Forgotpass = () => {
   return (

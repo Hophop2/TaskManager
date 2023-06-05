@@ -3,6 +3,11 @@ import User from './User'
 import useTitle from "../../../../hooks/useTitle"
 import { Bckg } from "../../../../styles/BckgStyle"
 import { Container } from "../../../../styles/UserStyle"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faHouse } from "@fortawesome/free-solid-svg-icons"
+import { Link } from "react-router-dom"
+import { Icon } from "../../../../styles/BigTaskStyle"
+import Clock from "../../components/Clock"
 
 
 
@@ -39,9 +44,30 @@ const UsersList = () => {
         content = (
             <>
             <Bckg>
+           
                 <Container>
+                    <div className="nav-wrapper">
+                    <Icon>
+    <Link to="/tasks"><FontAwesomeIcon icon={faHouse} size="2xl"  /></Link>
+    </Icon>
+                    
+                    <Link style={{textDecoration: "none"}} to="/users/new"><span className="add-user">Add User</span></Link>
+                    </div>
                     <h1>Users List</h1>
-            {tableContent}
+                   
+                    <table>
+                        <thead>
+                    <tr>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Edit</th>
+                </tr>
+                    {tableContent}
+                    </thead>
+                    </table>
+                    
+                   
+        
             </Container>
             </Bckg>
             </>

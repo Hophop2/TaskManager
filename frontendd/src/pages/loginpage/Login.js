@@ -1,9 +1,10 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { Container } from "./styleLoginPage/loginPageStyle";
+
 import { Bckg } from "../../styles/BckgStyle";
 import { StandBtn } from "../../styles/StandardBtn";
+import { Container } from "../../styles/loginPageStyle";
 
 
 
